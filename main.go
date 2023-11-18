@@ -1,13 +1,14 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/hpcloud/tail"
 )
 
 func main() {
-	filePath := "test.log"
+	filePath := "sshsesame-out.log"
 
 	t, err := tail.TailFile(filePath, tail.Config{Follow: true})
 	if err != nil {
@@ -15,7 +16,18 @@ func main() {
 		return
 	}
 
+	repo := CreateRepository()
+
 	for line := range t.Lines {
-		fmt.Println(line.Text)
+		var logLine LogLine
+
+		err := json.Unmarshal([]byte(line.Text), &logLine)
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
+
+		repo.Insert(logLine)
+
 	}
 }
