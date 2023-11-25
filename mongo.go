@@ -53,7 +53,8 @@ func (repo *MongoRepository) Insert(logLine LogLine) {
 	// Create an update document with the values you want to set
 	update := bson.M{
 		"$set": bson.M{
-			"source": logLine.Source,
+			"source":     logLine.Source,
+			"lastUpdate": logLine.Time,
 		},
 		"$push": bson.M{
 			"logEvents": logLine,

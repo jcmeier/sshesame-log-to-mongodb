@@ -3,5 +3,5 @@ WORKDIR /go/src/sshesame-log-to-mongodb
 ADD . /go/src/sshesame-log-to-mongodb
 RUN go build -o /go/bin/sshesame-log-to-mongodb
 FROM gcr.io/distroless/base
-VOLUME /data
-CMD ["/sshesame-log-to-mongodb"]
+COPY --from=build-env /go/bin/sshesame-log-to-mongodb /
+CMD ["/sshesame", "-config", "/config.yaml", "-data_dir", "/data"]

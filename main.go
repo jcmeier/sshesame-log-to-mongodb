@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	filePath := "sshsesame-out.log"
+	filePath := "sshesame.log"
 
 	t, err := tail.TailFile(filePath, tail.Config{Follow: true})
 	if err != nil {
