@@ -27,6 +27,8 @@ func main() {
 			return
 		}
 
+		logLine.ExtractIpAndPort()
+
 		repo.Insert(logLine)
 
 	}

@@ -1,6 +1,9 @@
 package main
 
 import (
+	"fmt"
+	"net"
+	"regexp"
 	"time"
 )
 
@@ -21,8 +24,35 @@ type Event struct {
 
 // MyClass represents the main class with the specified attributes
 type LogLine struct {
-	Time      time.Time `json:"time" bson:"time"`
-	Source    string    `json:"source" bson:"source"`
-	EventType string    `json:"event_type" "bson:event_type"`
-	Event     Event     `json:"event" "bson:event"`
+	Time          time.Time     `json:"time" bson:"time"`
+	Source        string        `json:"source" bson:"source"`
+	SourceDetails SourceDetails `json:"source_details" bson: "source_details"`
+	EventType     string        `json:"event_type" "bson:event_type"`
+	Event         Event         `json:"event" "bson:event"`
+}
+
+type SourceDetails struct {
+	Ip         string `json:"ip" bson"ip"`
+	Port       string `json:"port" bson"port"`
+	ReverseDNS string `json:"reverse_dns" bson"reverse_dns"`
+}
+
+var regex *regexp.Regexp = regexp.MustCompile(`((?:\d{1,3}\.){3}\d{1,3}|\[?(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}\]?)\s*:\s*(\d+)`)
+
+func (l *LogLine) ExtractIpAndPort() {
+	matches := regex.FindAllStringSubmatch(l.Source, -1)
+	for _, match := range matches {
+		addr, err := net.LookupAddr(match[1])
+		reverseDNS := `<unknown>`
+		if err == nil {
+			reverseDNS = addr[0]
+		}
+		l.SourceDetails = SourceDetails{
+			match[1],
+			match[2],
+			reverseDNS,
+		}
+	}
+
+	fmt.Println(l.SourceDetails)
 }
