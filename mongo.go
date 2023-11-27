@@ -10,13 +10,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type Person struct {
-	ID       string `bson:"_id"`
-	Name     string `bson:"name"`
-	Age      int    `bson:"age"`
-	Location string `bson:"location"`
-}
-
 type MongoRepository struct {
 	database mongo.Database
 	client   mongo.Client
