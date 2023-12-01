@@ -3,11 +3,17 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 
 	"github.com/hpcloud/tail"
 )
 
 func main() {
+	mongodbURI, exists := os.LookupEnv("MONGODB_CONNECTION_STRING")
+	if !exists {
+		panic("Env variable MONGODB_CONNECTION_STRING needs to be set")
+	}
+
 	filePath := "/sshesame.log"
 
 	t, err := tail.TailFile(filePath, tail.Config{Follow: true})
@@ -16,7 +22,7 @@ func main() {
 		return
 	}
 
-	repo := CreateRepository()
+	repo := CreateRepository(mongodbURI)
 
 	for line := range t.Lines {
 		var logLine LogLine
