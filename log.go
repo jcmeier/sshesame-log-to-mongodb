@@ -22,11 +22,10 @@ type Event struct {
 	Input         string `name:"input" bson:"input,omitempty"`
 }
 
-// MyClass represents the main class with the specified attributes
 type LogLine struct {
 	Time          time.Time     `json:"time" bson:"time"`
 	Source        string        `json:"source" bson:"source"`
-	SourceDetails SourceDetails `json:"source_details" bson: "source_details"`
+	SourceDetails SourceDetails `json:"source_details" bson: "-"`
 	EventType     string        `json:"event_type" "bson:event_type"`
 	Event         Event         `json:"event" "bson:event"`
 }
